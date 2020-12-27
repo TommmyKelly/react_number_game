@@ -181,7 +181,9 @@ function App() {
         <div id='history'>
           <ul class='list-group'>
             {guesses.map((guess, index) => (
-              <li class='list-group-item'>{guess.toString()}</li>
+              <li key={index} class='list-group-item'>
+                {guess.toString()}
+              </li>
             ))}
           </ul>
         </div>
