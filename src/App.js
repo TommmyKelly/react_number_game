@@ -12,6 +12,8 @@ function App() {
 
   useEffect(() => {
     getRandomNumber();
+    inputNumber.current.focus();
+    // eslint-disable-next-line
   }, []);
 
   const getRandomNumber = () => {
@@ -19,19 +21,14 @@ function App() {
     setNumber(firstNumber);
     inputNumber.current.value = "";
     let startMessage = "Are you ready to play?";
+    setTextMessage(startMessage);
     setGuesses([]);
-    getDialog("start1", startMessage);
+
     setText("alert alert-dark role=alert");
     console.log(number);
   };
 
-  // const saveHistory = (guess) => {
-  //   guesses.push(guess);
-  // };
-
   const checkNumber = () => {
-    let checkText = "";
-
     if (
       inputNumber.current.value === "" ||
       inputNumber.current.value < 1 ||
@@ -39,6 +36,7 @@ function App() {
     ) {
       setinputError(true);
       resetAlert();
+      inputNumber.current.value = "";
       return;
     }
 
@@ -46,19 +44,19 @@ function App() {
 
     if (inputNumber.current.value > number) {
       setGuesses([inputNumber.current.value, ...guesses]);
-      console.log("to High");
-      checkText = showNumberAbove();
-      setText(checkText);
+
+      setText("alert alert-warning role=alert");
+      setTextMessage("Guess is to high");
     } else if (inputNumber.current.value < number) {
       setGuesses([inputNumber.current.value, ...guesses]);
-      console.log("to Low");
-      checkText = showNumberBelow();
-      setText(checkText);
+
+      setText("alert alert-warning role=alert");
+      setTextMessage("Guess is to Low");
     } else if (inputNumber.current.value == number) {
-      console.log("correct");
-      checkText = showYouWon();
-      setText(checkText);
+      setText("alert alert-success role=alert");
+      setTextMessage("Guess is correct");
     }
+    inputNumber.current.value = "";
   };
 
   const resetAlert = () => {
@@ -67,82 +65,20 @@ function App() {
     }, 2000);
   };
 
-  const getDialog = (dialogType, text) => {
-    let dialog;
-    switch (dialogType) {
-      case "warning":
-        dialog = "alert alert-warning role=alert";
-        setTextMessage(text);
-        break;
-      case "won":
-        dialog = "alert alert-success role=alert";
-        setTextMessage(text);
-        break;
-      // case "start":
-      //   dialog = "alert alert-dark role=alert";
-      //   setTextMessage(text);
-      //   break;
-      case "start1":
-        dialog = "alert alert-warning role=alert";
-        setTextMessage(text);
-        break;
-    }
-    // dialog += text;
-    // dialog += "</div>";
-    return dialog;
+  const handelKeyPress = (event) => {
+    event.key === "Enter" && checkNumber();
   };
-
-  function showYouWon() {
-    //
-    const text = "YOU GUESSED IT!!!";
-    /**
-     * Retrieve the dialog using the getDialog() function
-     * and save it to variable called dialog
-     * HINT: Use the 'won' and text parameters
-     */
-
-    //
-    let dialog = getDialog("won", text);
-    return dialog;
-  }
-
-  function showNumberAbove() {
-    const text = "Your guess is too high!";
-    /**
-     * Retrieve the dialog using the getDialog() function
-     * and save it to variable called dialog
-     * HINT: Use the 'warning' and text parameters
-     */
-
-    //
-    let dialog = getDialog("warning", text);
-    return dialog;
-  }
-
-  function showNumberBelow() {
-    const text = "Your guess is too low!";
-    /**
-     * Retrieve the dialog using the getDialog() function
-     * and save it to variable called dialog
-     * HINT: Use the 'warning' and text parameters
-     */
-
-    //
-    let dialog = getDialog("warning", text);
-    return dialog;
-  }
 
   return (
     <div className='App text-center'>
-      <nav class='navbar navbar-dark bg-dark'>
-        <a class='navbar-brand' href='#'>
+      <nav className='navbar navbar-dark bg-dark'>
+        <a className='navbar-brand' href='#'>
           Guess The Number
         </a>
       </nav>
       <main>
-        <h1 class='banner p-3'>1.2.3.</h1>
-
-        <div class='form-group '>
+        <h1 className='banner p-3'>1-2-3</h1>
+        <div className='form-group '>
           {inputError && (
             <div id='input-warning' className='alert alert-danger role=alert'>
               Numbers must be greater than 0 and less than 100
@@ -151,38 +87,41 @@ function App() {
           <input
             ref={inputNumber}
             id='number-guess'
-            class='form-control form-control-lg'
+            className='form-control form-control-lg'
             type='number'
             placeholder="What's your guess?"
             min='0'
             max='100'
+            onKeyDown={handelKeyPress}
           />
         </div>
-        <div id='result' className={text}>
+        <div id='result' className={text + " mb-2"}>
           {textMessage}
         </div>
         <button
           type='button'
           id='number-submit'
-          class='btn btn-lg btn-secondary'
+          className='btn btn-secondary'
           onClick={checkNumber}
         >
           Check Me
-        </button>
+        </button>{" "}
         <button
           type='button'
           id='restart-game'
-          class='btn btn-lg btn-light'
+          className='btn btn-info'
           onClick={getRandomNumber}
         >
           Restart
         </button>
-        <div id='trys'>Attempts {guesses.length}</div>
+        <div id='trys' className='alert alert-secondary role=alert mt-2'>
+          Attempts {guesses.length}
+        </div>
         <div id='history'>
-          <ul class='list-group'>
+          <ul className='list-group'>
             {guesses.map((guess, index) => (
-              <li key={index} class='list-group-item'>
-                {guess.toString()}
+              <li key={index} className='list-group-item'>
+                You gussed {guess.toString()}
               </li>
             ))}
           </ul>

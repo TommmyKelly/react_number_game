@@ -21,3 +21,14 @@
   padding: 0.75rem;
   border: 1px solid rgba(0, 0, 0, 0.125);
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.form-control:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
